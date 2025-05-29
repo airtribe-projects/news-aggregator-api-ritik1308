@@ -1,6 +1,5 @@
 const User = require('../model/userModel');
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
 const { default: axios } = require('axios');
 
 const getNews = async (req, res, next) => {
@@ -14,7 +13,7 @@ const getNews = async (req, res, next) => {
         const articles = response.data.articles;
         return res.status(200).send({
             status: 200,
-            news: articles // <-- property should be 'news' to match your test
+            news: articles 
         });
     } catch (err) {
         console.error('Error fetching news:', err.message);
