@@ -89,13 +89,20 @@ const protect = async (req, res, next) => {
         const token = req.header('Authorization')?.replace('Bearer ', '');
         if (!token) {
             return res.status(401).send({
-                success: false,
+            status: 401,
                 message: 'Access denied. No token provided.'
             });
         }
-
+       
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.user = decoded; 
+         const data=await User.findOne({email:decoded.data.email});
+        if (!data) {
+            return res.status(401).send({
+                status: 401,
+                message: 'Invalid token.'
+            });
+        }
+        req.user = data; 
 
         next();
     } catch (err) {

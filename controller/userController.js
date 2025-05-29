@@ -4,13 +4,13 @@ const bcrypt = require('bcrypt');
 
 const preferences = async (req, res, next) => {
     try {
-        const email = req.user.response.email;
+        const email = req.user.email; // FIXED
 
         const user = await User.findOne({ email });
 
         if (!user) {
-            return res.status(404).send({
-                status: 404,
+            return res.status(401).send({
+                status: 401,
                 message: 'User not found'
             });
         }
@@ -25,8 +25,7 @@ const preferences = async (req, res, next) => {
         console.log(err.message);
         return res.status(500).send({ status: 500 });
     }
-};
-
+}
 
 const setPreferences = async (req, res, next) => {
     try {
@@ -40,9 +39,9 @@ const setPreferences = async (req, res, next) => {
         }
 
         const data = await User.findByIdAndUpdate(
-            req.user.response._id, 
-            { preferences }, 
-            { new: true } // Return the updated document
+            req.user._id, // FIXED
+            { preferences },
+            { new: true }
         );
 
         if (!data) {
@@ -54,7 +53,7 @@ const setPreferences = async (req, res, next) => {
 
         return res.status(200).send({
             status: 200,
-            data
+            preferences: data.preferences // FIXED: return updated preferences
         });
 
     } catch (err) {
